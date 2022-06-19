@@ -2,6 +2,7 @@ package com.gaj.member.domain;
 
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Builder
+@DynamicInsert
 public class Member {
 
     @Id
@@ -28,9 +30,11 @@ public class Member {
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(32) default 'USER'")
     private RoleType role;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(32) default 'ACTIVE'")
     @Setter
     private StateType state;
 
