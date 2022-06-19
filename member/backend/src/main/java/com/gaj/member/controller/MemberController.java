@@ -1,30 +1,40 @@
 package com.gaj.member.controller;
 
-import com.gaj.member.dto.LoginRequestDto;
+import com.gaj.member.dto.CommonResponseDto;
+import com.gaj.member.dto.social.OAuth2CallbackDto;
+import com.gaj.member.service.GoogleService;
 import com.gaj.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/v1/api")
 public class MemberController {
 
     private final MemberService memberService;
+    private final GoogleService googleService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(LoginRequestDto dto) {
-
-        memberService.login(dto);
-
-        //return ResponseEntity.ok().build();
-        return ResponseEntity.ok("유저 있음 O");
+    @GetMapping("/oauth/google")
+    public ResponseEntity oAuth2Page() {
+        return ResponseEntity.ok(CommonResponseDto.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .data(googleService.getLoginPageUrl()).build());
     }
 
-    /* TODO
-    * 회원가입, OAuth
-    * */
+    @GetMapping("/oauth/callbacks/google")
+    public ResponseEntity oAuth2Login(OAuth2CallbackDto callback) {
+
+        if (callback.getCode() != null) {
+            // 회원가입 이후 닉네임 입력 어떻게 처리?
+            return ResponseEntity.ok(CommonResponseDto.builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .data(memberService.googleLogin(callback.getCode())).build());
+        } else {
+
+            return ResponseEntity.badRequest().body(callback.getErrorDescription());
+        }
+    }
+
 }
