@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:secrets.yml
   datasource:
     url: jdbc:h2:mem:test;MODE=MYSQL
     username: root
