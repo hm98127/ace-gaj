@@ -31,21 +31,22 @@ public class MemberService {
     }
 
 
-    public ResponseEntity socialLogin(Member member) {
+    public String socialLogin(Member member) {
 
         // return JWT
-        return ResponseEntity.ok("Logged in");
+        return "{JWT}";
     }
 
-    public ResponseEntity socialSignup(Member member) {
+    public String socialSignup(Member member) {
 
         memberRepository.save(member);
         // return JWT
-        return ResponseEntity.ok("Signed up");
+        return "{JWT}";
     }
 
+    // JWT return
     @Transactional
-    public ResponseEntity googleLogin(String code) {
+    public String googleLogin(String code) {
 
         TokenResponseDto tokenResponseDto = googleService.getTokenByCode(code);
         UserInfoResponseDto userInfoResponseDto = googleService.getUserInfoByAccessToken(tokenResponseDto.getAccessToken());
