@@ -25,9 +25,10 @@ public class MemberController {
 
     @GetMapping("/oauth/callbacks/google")
     public ResponseEntity oAuth2Login(OAuth2CallbackDto callback) {
+        // 회원가입 이후 닉네임 입력 어떻게 처리?
 
         if (callback.getCode() != null) {
-            // 회원가입 이후 닉네임 입력 어떻게 처리?
+
             return ResponseEntity.ok(CommonResponseDto.builder()
                             .statusCode(HttpStatus.OK.value())
                             .data(memberService.googleLogin(callback.getCode())).build());
