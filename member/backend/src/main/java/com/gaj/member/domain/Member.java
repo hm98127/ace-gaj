@@ -2,6 +2,7 @@ package com.gaj.member.domain;
 
 
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -36,5 +37,9 @@ public class Member extends BaseTimeEntity{
 
     public void withdrawal() {
         setState(StateType.WITHDRAWAL);
+    }
+
+    public boolean validPassword(PasswordEncoder passwordEncoder, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, password);
     }
 }

@@ -1,12 +1,12 @@
 package com.gaj.member.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gaj.member.domain.Member;
 import com.gaj.member.dto.social.TokenResponseDto;
 import com.gaj.member.dto.social.UserInfoResponseDto;
+import com.gaj.member.exception.MemberException;
 import com.gaj.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,18 +16,30 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final GoogleService googleService;
 
-    public void login() {
+    public String login(Member member) throws MemberException {
+        Optional<Member> targetMember = memberRepository.findByEmail(member.getEmail());
 
-        // return JWT
+        if (targetMember.isPresent() &&
+                targetMember.get().validPassword(passwordEncoder, member.getPassword())) {
+            return "{JWT}";
+        } else {
+            throw MemberException.MEMBER_NOT_EXISTS_EXCEPTION;
+        }
     }
 
-    public void signup(Member member) {
+    public String signup(Member member) {
+        Optional<Member> targetMember = memberRepository.findByEmail(member.getEmail());
 
-        // memberRepository.save(member);
-        // return JWT
+        if (targetMember.isEmpty()) {
+            memberRepository.save(member);
+            return "{JWT}";
+        } else {
+            throw MemberException.MEMBER_ALREADY_EXISTS_EXCEPTION;
+        }
     }
 
 
