@@ -26,7 +26,8 @@ public class MemberController {
 
         Member member = dto.toEntity();
         return ResponseEntity.ok(RestResponse.builder()
-                    .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
                     .data(memberService.login(member)).build());
     }
 
@@ -35,14 +36,16 @@ public class MemberController {
 
         Member member = dto.toEntity();
         return ResponseEntity.ok(RestResponse.builder()
-                    .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.getReasonPhrase())
                     .data(memberService.signup(member)).build());
     }
 
     @GetMapping("/oauth/google")
     public ResponseEntity oAuth2Page() {
         return ResponseEntity.ok(RestResponse.builder()
-                        .code(HttpStatus.OK.value())
+                        .status(HttpStatus.OK.value())
+                        .message(HttpStatus.OK.getReasonPhrase())
                         .data(googleService.getLoginPageUrl()).build());
     }
 
@@ -53,7 +56,8 @@ public class MemberController {
         if (callback.getCode() != null) {
 
             return ResponseEntity.ok(RestResponse.builder()
-                            .code(HttpStatus.OK.value())
+                            .status(HttpStatus.OK.value())
+                            .message(HttpStatus.OK.getReasonPhrase())
                             .data(memberService.googleLogin(callback.getCode())).build());
         } else {
 
