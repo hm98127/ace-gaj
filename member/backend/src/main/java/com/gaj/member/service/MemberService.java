@@ -35,6 +35,7 @@ public class MemberService {
         Optional<Member> targetMember = memberRepository.findByEmail(member.getEmail());
 
         if (targetMember.isEmpty()) {
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
             memberRepository.save(member);
             return "{JWT}";
         } else {
